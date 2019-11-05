@@ -13,7 +13,10 @@
     return *this;                                                \
   }                                                              \
   inline const T& name() const noexcept { /* NOLINT */                  \
-    return this->name##_;                                        \
+    TORCH_CHECK( \
+      this->name##_.has_value(), \
+      "Expected `", #name, "` to be specified in options, but it wasn't"); \
+    return this->name##_.value(); \
   }                                                              \
  private:                                                        \
-  T name##_ /* NOLINT */
+  c10::optional<T> name##_ /* NOLINT */
